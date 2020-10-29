@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <!-- <title>Flask Todo App with Tailwind</title> -->
+    <title>
+      {% if title %} Dani-nator (lyrics) - {{ title }} {% else %} Dani-nator {%
+      endif %}
+    </title>
+  </head>
+  <body>
+    <!-- <h1 class="text-center">Hello Flask</h1> -->
+    <!-- <h1>Dani-nator <sub>title</sub></h1>
+    <h1>{% if title %} {{ title }} {% else %} {% endif %}</h1>
+    <h1>{% if loading %} {{ "Loading..." }} {% else %} wait {% endif %}</h1>
+    <form method="POST">
+      <input name="text" />
+      <input type="submit" />
+    </form> -->
+    <div></div>
+    <div
+      class="bg-white rounded shadow content-center p-6 m-6 w-full lg:w-3/4 lg:max-w-lg"
+    >
+      <div class="mb-4">
+        <h1 class="text-grey-darkest text-center">
+          {% if title %} Dani-nator<sup>(lyrics)</sup> {% else %} {% endif %}
+        </h1>
+        <h1 class="text-grey-darkest text-center">
+          {% if title %} {{ title }} {% else %} Dani-nator<sup>(lyrics)</sup> {%
+          endif %}
+        </h1>
+        <div class="flex mt-4">
+          <form action="/" method="post" class="inline-flex">
+            <input
+              class="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker"
+              placeholder="Song Title"
+              type="text"
+              name="text"
+            />
+            <button
+              class="flex-no-shrink p-2 border-2 rounded text-teal border-teal hover:text-green hover:bg-teal"
+              type="submit"
+            >
+              Search song lyrics translations
+            </button>
+          </form>
+        </div>
+      </div>
+      <div>
+        {% if tasks %} {% for task in tasks %}
+        <!-- <h1>"AAAAAAAAAAAAAAAAA"</h1> -->
+        <div class="flex mb-1 items-center">
+          <p class="text-center w-full text-grey-darkest">
+            <!-- <a href="#">{{ task }}</a> -->
+            {{ task }}
+          </p>
+          <!-- <button
+            class="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red bg-red-600"
+          >
+            Remove
+          </button> -->
+        </div>
+        {% endfor %}
+        <p class="text-center">💚</p>
+        {% else %}
+        <p class="text-center">No Lyrics to Display</p>
+        {% endif %}
+      </div>
+    </div>
+  </body>
+</html>
