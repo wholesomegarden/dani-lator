@@ -120,12 +120,22 @@ def doit(item):
 	fullL = []
 
 	i = 0
-	for r in response[0]['translations'][0]['text'][::-1].split("\n")[::-1]:
-		# print(r)
+	print()
+	print("!!!!!!!!!",response)
+	print()
+	if "error" in response.keys():
+		if response["error"]["code"] != "0":
+			print("EEEEEE")
+			print("EEEEEE")
+			print("EEEEEE")
+			song_info.append(""+str(response))
+	else:
+		for r in c[0]['translations'][0]['text'][::-1].split("\n")[::-1]:
+			print("@@@@@@@",r)
 
-		# fullL = [lyrics[i]+"\n"+r[::-1]]
-		translated.append(r)
-		i+=1
+			# fullL = [lyrics[i]+"\n"+r[::-1]]
+			translated.append(r)
+			i+=1
 
 # return fullL
 
@@ -135,14 +145,18 @@ def doit(item):
 	# return
 	# fullL = []
 	fullt = "<h1>"+item+"</h1>"
-	for c in range(len(translated)):
+	for c in range(len(lyrics)):
 		fullL.append(lyrics[c])
-		fullL.append(translated[c][::-1])
-		fullt += "<pre>"+lyrics[c] + "</pre>"
-		fullt += "<pre>"+translated[c][::-1] + "</pre>"
+		if c < len(translated):
+			fullL.append(translated[c][::-1])
+		# fullt += "<pre>"+lyrics[c] + "</pre>"
+		# fullt += "<pre>"+translated[c][::-1] + "</pre>"
 		# print(lyrics[c])
 		# print(translated[c])
 		print("")
+
+	print(" @ @ @ @ @ @  @")
+	print(fullL)
 	return fullL, song_info
 
 from flask import Flask, render_template, request, redirect  # add
@@ -150,10 +164,10 @@ from flask import Flask, render_template, request, redirect  # add
 # from Translate import Danilator
 # Danilator.search("new soul")
 
-key_var_name = '6e212400769e4218b93a53e51f3893cf'
+key_var_name = '436cb96eb2d94be29c81bfd3dd5fcd5e'
 # if not key_var_name in os.environ:
 #     raise Exception('Please set/export the environment variable: {}'.format(key_var_name))
-subscription_key = '6e212400769e4218b93a53e51f3893cf'
+subscription_key = '436cb96eb2d94be29c81bfd3dd5fcd5e'
 
 endpoint = "https://api.cognitive.microsofttranslator.com/"
 
@@ -206,9 +220,13 @@ def my_form_post():
 	a, song_info = doit(processed_text)
 	# print(a)
 	# return redirect('/lyrics/'+text)
+	song_txt = ""
+
 	if song_info[0] is not "":
+		for s in song_info:
+			song_txt += ""+s
 		print("!!!!!!!!!!!!!!!!!!",song_info[0]+" - "+song_info[1])
-		return render_template('base.html',tasks = a , title = song_info[0]+" - "+song_info[1])
+		return render_template('base.html',tasks = a , title = song_txt)
 	return render_template('base.html')
 	return a
 
@@ -227,4 +245,3 @@ def get_stairway(title):
 
 if __name__ == "__main__":
    app.run(debug=True)
-
