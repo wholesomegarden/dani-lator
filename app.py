@@ -123,14 +123,17 @@ def doit(item):
 	print()
 	print("!!!!!!!!!",response)
 	print()
-	if "error" in response.keys():
+
+
+	if type(response) == type({}) and "error" in response.keys():
 		if response["error"]["code"] != "0":
 			print("EEEEEE")
 			print("EEEEEE")
 			print("EEEEEE")
 			song_info.append(""+str(response))
 	else:
-		for r in c[0]['translations'][0]['text'][::-1].split("\n")[::-1]:
+		print(c)
+		for r in response[0]['translations'][0]['text'][::-1].split("\n")[::-1]:
 			print("@@@@@@@",r)
 
 			# fullL = [lyrics[i]+"\n"+r[::-1]]
