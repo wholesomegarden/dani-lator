@@ -152,6 +152,8 @@ def doit(item):
 		fullL.append(lyrics[c])
 		if c < len(translated):
 			fullL.append(translated[c][::-1])
+		fullL.append("")
+		fullL.append("")
 		# fullt += "<pre>"+lyrics[c] + "</pre>"
 		# fullt += "<pre>"+translated[c][::-1] + "</pre>"
 		# print(lyrics[c])
@@ -226,8 +228,9 @@ def my_form_post():
 	song_txt = ""
 
 	if song_info[0] is not "":
-		for s in song_info:
-			song_txt += ""+s
+		song_txt = song_info[0]
+		for s in song_info[1:]:
+			song_txt += " - "+s
 		print("!!!!!!!!!!!!!!!!!!",song_info[0]+" - "+song_info[1])
 		return render_template('base.html',tasks = a , title = song_txt)
 	return render_template('base.html')

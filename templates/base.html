@@ -3,74 +3,246 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dani-lator lyrics 🌈</title>
     <link
       href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
       rel="stylesheet"
     />
-    <!-- <title>Flask Todo App with Tailwind</title> -->
-    <title>
-      {% if title %} Dani-nator (lyrics) - {{ title }} {% else %} Dani-nator {%
-      endif %}
-    </title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+      integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+      crossorigin="anonymous"
+    />
+    <style>
+      * {
+        transition: 0.2s all;
+      }
+
+      body {
+        max-width: 980px;
+        margin: 0 auto;
+
+        background-color: #00dbde;
+        background-image: linear-gradient(90deg, #00dbde 0%, #fc00ff 100%);
+      }
+
+      .bg-pan-left {
+        animation: bg-pan-left 1s ease-in-out infinite alternate both;
+      }
+
+      @keyframes bg-pan-left {
+        0% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      nav {
+        /* background-image: linear-gradient(
+          90deg,
+          #4158d0 0%,
+          #c850c0 46%,
+          #ffcc70 100%
+        ); */
+      }
+
+      .css-selector {
+        background: linear-gradient(270deg, #0aebb1, #800aeb);
+        background-size: 400% 400%;
+
+        animation: GradientAnimation 30s ease infinite;
+      }
+      .css-selector-2 {
+        background: linear-gradient(90deg, #0aebb1, #800aeb);
+        background-size: 400% 400%;
+
+        animation: GradientAnimation 3s ease infinite;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        /* text-fill-color: transparent; */
+      }
+
+      @keyframes GradientAnimation {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
   </head>
-  <body>
-    <!-- <h1 class="text-center">Hello Flask</h1> -->
-    <!-- <h1>Dani-nator <sub>title</sub></h1>
-    <h1>{% if title %} {{ title }} {% else %} {% endif %}</h1>
-    <h1>{% if loading %} {{ "Loading..." }} {% else %} wait {% endif %}</h1>
-    <form method="POST">
-      <input name="text" />
-      <input type="submit" />
-    </form> -->
-    <div></div>
+  <body class="">
+    <!-- modal center -->
     <div
-      class="bg-white rounded shadow content-center p-6 m-6 w-full lg:w-3/4 lg:max-w-lg"
+      class="relative antialiased flex flex-col min-h-screen lg:flex-row lg:items-center lg:p-8"
     >
-      <div class="mb-4">
-        <h1 class="text-grey-darkest text-center">
-          {% if title %} Dani-nator<sup>(lyrics)</sup> {% else %} {% endif %}
-        </h1>
-        <h1 class="text-grey-darkest text-center">
-          {% if title %} {{ title }} {% else %} Dani-nator<sup>(lyrics)</sup> {%
-          endif %}
-        </h1>
-        <div class="flex mt-4">
-          <form action="/" method="post" class="inline-flex">
+      <!-- modal box + shadow -->
+      <div
+        class="flex flex-col flex-grow bg-orange-100 lg:shadow-2xl lg:rounded-lg lg:overflow-hidden"
+      >
+        <header class="">
+          <ul class="list-none p-10 flex items-center">
+            <li class="css-selector-2 px-6 text-4xl">
+              <i class="fas fa-assistive-listening-systems"></i>
+              Dani-lator<sup><sub>(lyrics)</sub></sup
+              >&hairsp;
+            </li>
+            <li>
+              <a
+                href="#"
+                class="inline-block py-4 px-6 text-orange-900 hover:text-orange-700 no-underline"
+                ><i class="fab fa-discord text-3xl"></i
+              ></a>
+            </li>
+            <li>
+              <a
+                href="#"
+                class="inline-block py-4 px-6 text-orange-900 hover:text-orange-700 no-underline"
+                ><i class="fab fa-github text-3xl"></i
+              ></a>
+            </li>
+          </ul>
+        </header>
+
+        <main
+          class="main-bg p-12 bg-no-repeat bg-right-top flex-grow flex flex-col justify-center"
+        >
+          <header
+            class="pb-4 flex items-center sm:font-medium text-2xl sm:text-3xl md:text-4xl text-orange-900"
+          ></header>
+          <form action="/" method="post" class="inline-flex pb-4">
             <input
               class="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker"
-              placeholder="Song Title or URL (experimental)"
+              placeholder="Song Title or URL…"
               type="text"
               name="text"
             />
             <button
-              class="flex-no-shrink p-2 border-2 rounded text-teal border-teal hover:text-green hover:bg-teal"
+              class="flex-no-shrink bg-purple-200 p-2 border-2 rounded text-teal border-teal hover:text-green hover:bg-teal"
               type="submit"
             >
-              Search song lyrics translations
+              Search
             </button>
           </form>
-        </div>
-      </div>
-      <div>
-        {% if tasks %} {% for task in tasks %}
-        <!-- <h1>"AAAAAAAAAAAAAAAAA"</h1> -->
-        <div class="flex mb-1 items-center">
-          <p class="text-center w-full text-grey-darkest">
-            <!-- <a href="#">{{ task }}</a> -->
-            {{ task }}
+          <div class="py-12">
+            <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+              <div class="lg:text-center">
+                <!-- <p
+                  class="text-base leading-6 text-orange-600 font-semibold tracking-wide uppercase"
+                >
+                  Translations <span class="text-orange-400">(תרגומים)</span>
+                </p> -->
+                <h3
+                  class="mt-2 text-lg leading-8 font-bold tracking-tight text-orange-900 sm:text-3xl sm:leading-10"
+                >
+                  {% if title %} {{ title }} {% else %} Dani-lator<sup
+                    >(lyrics)</sup
+                  >
+                  <p
+                    class="mt-4 max-w-2xl text-sm leading-7 text-orange-500 lg:mx-auto"
+                  >
+                    ⚠ Translations may vary in quality and quantity. All legal
+                    liability is on the peoples of the earth.
+                  </p>
+                  {% endif %}
+                </h3>
+                <!-- <h3
+                  class="mt-2 leading-8 font-bold tracking-tight text-orange-900 sm:text-2xl sm:leading-10"
+                >
+                  בקמן-טרנר הילוך גבוה - אתה לא ראית שום דבר עדיין
+                </h3> -->
+              </div>
+            </div>
+          </div>
+
+          <section>
+            {% if tasks %} {% for task in tasks %}
+            <!-- <h1>"AAAAAAAAAAAAAAAAA"</h1> -->
+            <div class="flex mb-1 items-center">
+              <p class="text-center w-full text-grey-darkest">
+                <!-- <a href="#">{{ task }}</a> -->
+                {{ task }}
+              </p>
+              <!-- <button
+                class="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red bg-red-600"
+              >
+                Remove
+              </button> -->
+            </div>
+            {% endfor %}
+            <p class="text-center">💚</p>
+            {% else %}
+            <p class="text-center">
+              No Lyrics to Display <br />
+              Search for more lyrics
+            </p>
+            {% endif %}
+          </section>
+        </main>
+        <footer class="bg-purple-300 py-8 px-4">
+          <p class="text-center text-xl mb-12 text-purple-700">
+            <i>Made with </i>💚
+            <span class="opacity-25"
+              ><br />⚠ <i>soon to be finished…</i> ⚠</span
+            >
           </p>
-          <!-- <button
-            class="flex-no-shrink p-2 ml-2 border-2 rounded text-red border-red hover:text-white hover:bg-red bg-red-600"
+          <div
+            class="mx-auto max-w-xl overflow-hidden flex justify-between items-center"
           >
-            Remove
-          </button> -->
-        </div>
-        {% endfor %}
-        <p class="text-center">💚</p>
-        {% else %}
-        <p class="text-center">No Lyrics to Display <br> Search for more lyrics</p>
-        {% endif %}
+            <ul class="text-sm text-purple-700 list-none p-0 flex items-center">
+              <li>
+                <!-- <a href="/" class="block mr-4 w-32">
+                    <img src="https://stitches.hyperyolo.com/images/logo-white.png" class="" alt="logo" />
+                  </a> -->
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="inline-block py-2 px-3 text-purple-600 hover:text-purple-800 no-underline"
+                  >Services</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="inline-block py-2 px-3 text-purple-600 hover:text-purple-800 no-underline"
+                  >Community</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="inline-block py-2 px-3 text-purple-600 hover:text-purple-800 no-underline"
+                  >FAQs</a
+                >
+              </li>
+            </ul>
+            <p class="inline-block py-2 px-3 text-purple-700 text-xs">
+              🄯2020 Wholesome Garden. All rights desolved.
+            </p>
+          </div>
+        </footer>
       </div>
     </div>
+    <!-- <content>
+      <svg
+        version="1.1"
+        baseProfile="full"
+        width="300"
+        height="200"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect width="100%" height="100%" fill="indigo" />
+        <circle cx="150" cy="100" r="80" fill="yellow" />
+      </svg>
+    </content> -->
   </body>
 </html>
