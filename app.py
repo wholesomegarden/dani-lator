@@ -96,7 +96,7 @@ def getLyrics(title):
 	print("\n#####",artists,"\n###########")
 	if len(artists) > 0:
 		artist = artists[0].replace("Song by ","")
- 		song_info.append(artist)
+		song_info.append(artist)
 
 	if len(song_info) < 2:
 		print("wwwwwwwwwwww",song_info)
