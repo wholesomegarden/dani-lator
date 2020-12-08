@@ -100,7 +100,17 @@ def doit(item):
 	if item == "":
 		return "", ["",""]
 		# item = input('Enter the song to find its lyricsxx: ')
-	lyricsText, song_info = getLyrics(item)
+
+	res = None
+	maxTries = 3
+	mc = 0
+	lyricsText, song_info = "sorry, lyrics not found, try again soon ",["Could not find lyrics",item]
+	while res is None and mc < maxTries:
+		res = getLyrics(item)
+		mc+=1
+		if res is not None and len(res) > 1:
+			lyricsText, song_info = res
+
 	chars = [["-"," "],["(",""],[")",""]]
 	for c in chars:
 		lyricsText = lyricsText.replace(c[0],c[1])
