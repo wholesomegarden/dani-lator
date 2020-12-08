@@ -75,6 +75,15 @@ def getLyrics(title):
 	html = getHTML(url)
 	print("\n#####",html,"\n###########")
 
+	artists = []
+	for paper in html.findAll("div",class_="wx62f PZPZlf x7XAkb"):
+		for desc in paper.descendants:
+			print("DDDDDDDD",desc)
+		info = [desc.strip() for desc in paper.descendants if type(desc) == NavigableString]
+		for i in info:
+			artists.append(i)
+	print("\n#####",artists,"\n###########")
+
 	song_info = []
 	for paper in html.findAll("div",class_="SPZz6b"):
 		for desc in paper.descendants:
