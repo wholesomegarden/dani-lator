@@ -287,7 +287,7 @@ def get_all(processed_text):
 
 @app.route('/lyrics/<string:title>')
 def get_stairway(title):
-	processed_text = process_text(title.replace(”+”,” ")
+	processed_text = process_text(title.replace(”+”,” "))
 	print("!!!!!!!!!",processed_text)
 	return get_all(processed_text)
 
