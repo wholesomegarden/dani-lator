@@ -100,6 +100,7 @@ def getLyrics(title):
 
 	if len(song_info) < 2:
 		print("wwwwwwwwwwww",song_info)
+		song_info = []
 		for paper in html.findAll("div",class_="SPZz6b"):
 			for desc in paper.descendants:
 				print("DDDDDDDD",desc)
