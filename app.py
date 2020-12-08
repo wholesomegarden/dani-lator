@@ -73,7 +73,7 @@ def getLyrics(title):
 
 
 	html = getHTML(url)
-	print("\n#####",html,"\n###########">
+	print("\n#####",html,"\n###########")
 
 	song_info = []
 	for paper in html.findAll("div",class_="SPZz6b"):
