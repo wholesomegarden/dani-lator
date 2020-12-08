@@ -239,6 +239,8 @@ def my_form_post():
 
 	if song_info is None or len(song_info) < 1:
 		song_info.append(processed_text)
+		song_info.append("___")
+
 
 	if song_info[0] is not "":
 		song_txt = song_info[0]
