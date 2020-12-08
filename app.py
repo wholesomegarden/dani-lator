@@ -84,7 +84,7 @@ def getLyrics(title):
 			song_title.append(i)
 	print("\n#####333333",song_title,"\n###########")
 	if len(song_title) > 1:
-		songtitle = song_title[1].replace(" lyrics © BMG Rights Management","")
+		songtitle = song_title[1].split(" lyrics ©")[0]
 		song_info.append(songtitle)
 	artists = []
 	for paper in html.findAll("div",class_="wx62f PZPZlf x7XAkb"):
