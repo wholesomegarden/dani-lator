@@ -74,6 +74,18 @@ def getLyrics(title):
 
 	html = getHTML(url)
 	print("\n#####",html,"\n###########")
+	song_info = []
+	song_title = []
+	for paper in html.findAll("div",class_="auw0zb"):
+		for desc in paper.descendants:
+			print("DDDDDDDD",desc)
+		info = [desc.strip() for desc in paper.descendants if type(desc) == NavigableString]
+		for i in info:
+			song_title.append(i)
+	print("\n#####333333",song_title,"\n###########")
+	if len(song_title) > 0:
+		songtitle = song_title[0].replace(" lyrics © BMG Rights Management","")
+ 		song_info.append(songtitle)
 
 	artists = []
 	for paper in html.findAll("div",class_="wx62f PZPZlf x7XAkb"):
@@ -83,14 +95,18 @@ def getLyrics(title):
 		for i in info:
 			artists.append(i)
 	print("\n#####",artists,"\n###########")
+	if len(artists) > 0:
+		artist = artists[0].replace("Song by ","")
+ 		song_info.append(artist)
 
-	song_info = []
-	for paper in html.findAll("div",class_="SPZz6b"):
-		for desc in paper.descendants:
-			print("DDDDDDDD",desc)
-		info = [desc.strip() for desc in paper.descendants if type(desc) == NavigableString]
-		for i in info:
-			song_info.append(i)
+	if len(song_info) < 2:
+		print("wwwwwwwwwwww",song_info)
+		for paper in html.findAll("div",class_="SPZz6b"):
+			for desc in paper.descendants:
+				print("DDDDDDDD",desc)
+			info = [desc.strip() for desc in paper.descendants if type(desc) == NavigableString]
+			for i in info:
+				song_info.append(i)
 
 
 	lyrics=html.find_all("span", jsname="YS01Ge")
