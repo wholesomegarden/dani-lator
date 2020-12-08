@@ -237,7 +237,7 @@ def my_form_post():
 	# return redirect('/lyrics/'+text)
 	song_txt = ""
 
-	if song_info is None or Len(song_info) < 1:
+	if song_info is None or len(song_info) < 1:
 		song_info.append("wtf")
 		song_info.append("wtf")
 
