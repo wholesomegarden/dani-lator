@@ -229,10 +229,14 @@ def my_form():
 	return render_template('base.html')
 
 # loading = "aaaaaaaaa"
-
 @app.route('/', methods=['POST'])
 def my_form_post():
 	query = request.form['text']
+	processed_text = process_text(query)
+	print("!!!!!!!!!",processed_text)
+	return get_all(processed_text)
+
+def process_text(query):
 	if query is "":
 		return  render_template('base.html',title = u"\U0001F49A")
 	urlChecks = ["http","youtu"]
@@ -256,7 +260,11 @@ def my_form_post():
 
 	else:
 		processed_text = query.upper()
-	print("!!!!!!!!!",processed_text)
+	if processed_text == "":
+		return " "
+	return processed_text
+
+def get_all(processed_text):
 	a, song_info = doit(processed_text)
 	# print(a)
 	# return redirect('/lyrics/'+text)
@@ -279,14 +287,9 @@ def my_form_post():
 
 @app.route('/lyrics/<string:title>')
 def get_stairway(title):
-	# text = request.form['text']
-	# processed_text = text.upper()
-	# print("!!!!!!!!!",processed_text)
-	# a = doit(processed_text)
-	# print(a)
-	print("!!!!!!!!!!!!")
-	return doit(title)
-	# return a
+	processed_text = process_text(title.replace(”+”,” ")
+	print("!!!!!!!!!",processed_text)
+	return get_all(processed_text)
 
 
 if __name__ == "__main__":
