@@ -1,10 +1,9 @@
-# Dani-lator Lyric translations for friends
-
+# Dani-lator Lyrics - Find and Translate Songs on the fly!
 This repository includes Python code that users Google Crawling + Microsoft Translator, combined to search for and translate songs quickly.
 Running Flask on Heroku
 
-## check it out live at danilator.wholesome.garden 
-## Made with 💚
+**Check It Out! live at <a href="http://danilator.wholesome.garden" class="internal"><strong>Danilator.Wholesome.Garden</strong></a> <br>
+Made with 💚**
 
 
 # Translator Text API V3 - Python Samples
