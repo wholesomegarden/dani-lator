@@ -5,13 +5,13 @@ Running Flask on Heroku
 **Check It Out! live at <a href="http://danilator.wholesome.garden" class="internal"><strong>Danilator.Wholesome.Garden</strong></a> <br>
 Made with 💚**
 
-Upcoming:
-Language Selection
-Translation Toggle
-Google Analitics
-missing songs (tango marina)
+### Upcoming:
+Language Selection<br>
+Translation Toggle<br>
+Google Analitics<br>
+missing songs (tango marina)<br>
 
-Changelog:
-Search from Youtube URL
-crash fixes
-Updated to tailwind
+### Changelog:
+Search from Youtube URL<br>
+crash fixes<br>
+Updated to tailwind<br>
