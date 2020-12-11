@@ -1,3 +1,12 @@
+# Dani-lator Lyric translations for friends
+
+This repository includes Python code that users Google Crawling + Microsoft Translator, combined to search for and translate songs quickly.
+Running Flask on Heroku
+
+## check it out live at danilator.wholesome.garden 
+## Made with 💚
+
+
 # Translator Text API V3 - Python Samples
 
 This repository includes Python code samples for Microsoft Translator. The samples are designed to run on Python 2.7.x and Python 3.x. Each sample corresponds to a **Quickstart** activity on [doc.microsoft.com](https://docs.microsoft.com/azure/cognitive-services/translator/), including:
