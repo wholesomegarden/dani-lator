@@ -43,7 +43,6 @@ translator = Translator()
 # from lyrics_extractor import SongLyrics
 
 def getHTML(url):
-
 	headers_Get = {
 			'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0',
 			'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -321,21 +320,37 @@ def my_form_post():
 	return get_all(processed_text)
 
 def process_text(query):
+	print("QQQQQQQQQQQQQQQQ",query)
 	if query is "":
 		return  render_template('base.html',title = u"\U0001F49A")
-	urlChecks = ["http","youtu"]
+	urlChecks = ["http","youtu","spotify"]
 	url = False
 	for check in urlChecks:
 		if check.lower() in query.lower():
 			url = True
 
 	print("START")
-	proccessed_text = ""
+	processed_text = ""
 	if url:
+		print(query,"!!!!!!!!!!!!!!!!!!!")
+		query = str(re.search("(?P<url>https?://[^\s]+)", query).group("url"))
+		print(query,"!!!!!!!!!!!!!!!!!!!!")
 		html = getHTML(query)
+
 		try:
-			processed_text = "-".join(html.title.string.split("-")[:-1]).replace("/"," ")
-		except:
+			if "spotify" in query:
+				full = html.title.string
+				full = full.split(', a song by ')
+				full[1] = full[1].split(" ")[0].replace(","," ")
+				title, artist = full
+				title = str(re.sub(r" ?\([^)]+\)", "", title))
+				artist = str(re.sub(r" ?\([^)]+\)", "", artist))
+				processed_text = title +" "+artist
+				print(processed_text)
+			else:
+				processed_text = "-".join(html.title.string.split("-")[:-1]).replace("/"," ")
+		except Exception as e:
+			print("EEEEEEEEEEEEEEEEEE: Processing Text ",e)
 			processed_text = ""
 			return render_template('base.html')
 		print("UUUUUUUUUUUUUUUUUUUUUU",processed_text)
