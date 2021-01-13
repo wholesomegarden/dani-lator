@@ -32,6 +32,9 @@ import re
 
 import requests
 from bs4 import BeautifulSoup, UnicodeDammit, NavigableString
+
+from googletrans import Translator
+translator = Translator()
 # import datetime
 
 # GCS_API_KEY = 'AIzaSyCHOkya9h3n7BWA10S_CQQkz-p9Wlreh44'
@@ -122,6 +125,11 @@ def getLyrics(title):
 				c+=1
 		return nlyr, song_info
 
+def changes(txt,dict):
+	for k in dict:
+		txt = txt.replace(k,dict[k])
+	return txt
+
 def doit(item):
 	if item == "":
 		return "", ["",""]
@@ -149,32 +157,81 @@ def doit(item):
 	body = [{
 		'text' : lyricsText
 	}]
-	request = requests.post(constructed_url, headers=headers, json=body)
-	response = request.json()
 
 	translated = []
-	fullL = []
 
-	i = 0
-	print()
-	print("!!!!!!!!!",response)
-	print()
+	bing = False
+	if bing:
+		request = requests.post(constructed_url, headers=headers, json=body)
+		response = request.json()
+
+		fullL = []
+
+		i = 0
+		print()
+		print("!!!!!!!!!",response)
+		print()
 
 
-	if type(response) == type({}) and "error" in response.keys():
-		if response["error"]["code"] != "0":
-			print("EEEEEE")
-			print("EEEEEE")
-			print("EEEEEE")
-			song_info.append(""+str(response))
+		if type(response) == type({}) and "error" in response.keys():
+			if response["error"]["code"] != "0":
+				print("EEEEEE")
+				print("EEEEEE")
+				print("EEEEEE")
+				song_info.append(""+str(response))
+		else:
+			print(c)
+			for r in response[0]['translations'][0]['text'][::-1].split("\n")[::-1]:
+				print("@@@@@@@",r)
+
+				# fullL = [lyrics[i]+"\n"+r[::-1]]
+				translated.append(r)
+				i+=1
 	else:
-		print(c)
-		for r in response[0]['translations'][0]['text'][::-1].split("\n")[::-1]:
-			print("@@@@@@@",r)
 
-			# fullL = [lyrics[i]+"\n"+r[::-1]]
-			translated.append(r)
-			i+=1
+		res = translator.translate(lyricsText,dest="he")
+		translated = res.__dict__()["text"]
+		translated = translated.split("\n")
+		print("############################")
+		print(translated)
+		print("XXXXXXXXXXXXXXXXXXXXXXXXXXX")
+
+		# replacements = {" ":"%20", ";":"%3B", "\n":"%0A", ",":"%2C","\'":"%27"}
+		# base = "https://translate.google.com/?sl=auto&tl=iw&text="
+		# ending = "&op=translate"
+		#
+		# print(lyricsText)
+		# # input()
+		# url = base + changes(lyricsText, replacements) + ending
+		#
+		# print(url)
+		#
+		# page = requests.get(url)
+		# soup = BeautifulSoup(page.content, 'html.parser')
+		#
+		# spans = soup.find_all("span")
+		# #
+		# # for pp in P:
+		# # 	lyrics.append(pp.text.replace("\n","").replace("                ","").replace("              ",""))
+		#
+		# for s in spans:
+		# 	print(":::: ",s.text)
+		# 	translated.append(s.text)
+
+
+		# response = request.json()
+
+		# https://translate.google.com/?sl=auto&tl=iw&text=She%27s%20got%20a%20smile%20that%20it%20seems%20to%20me%0AReminds%20me%20of%20childhood%20memories%0AWhere%20everything%20was%20as%20fresh%20as%20the%20bright%20blue%20sky%0ANow%20and%20then%20when%20I%20see%20her%20face%0AShe%20takes%20me%20away%20to%20that%20special%20place%0AAnd%20if%20I%20stare%20too%20long%2C%20I%27d%20probably%20break%20down%20and%20cry%0AWhoa%2C%20oh%2C%20oh%0ASweet%20child%20o%27%20mine%0AWhoa%2C%20oh%2C%20oh%2C%20oh%0ASweet%20love%20of%20mine%0AShe%27s%20got%20eyes%20of%20the%20bluest%20skies%0AAs%20if%20they%20thought%20of%20rain%0AI%27d%20hate%20to%20look%20into%20those%20eyes%20and%20see%20an%20ounce%20of%20pain%0AHer%20hair%20reminds%20me%20of%20a%20warm%20safe%20place%0AWhere%20as%20a%20child%20I%27d%20hide%0AAnd%20pray%20for%20the%20thunder%20and%20the%20rain%20to%20quietly%20pass%20me%20by%0AWhoa%2C%20oh%2C%20oh%0ASweet%20child%20o%27%20mine%0AWhoa%20whoa%2C%20oh%2C%20oh%2C%20oh%0ASweet%20love%20of%20mine%0AWhoa%2C%20yeah%0AWhoa%2C%20oh%2C%20oh%2C%20oh%0ASweet%20child%20o%27%20mine%0AWhoa%2C%20oh%2C%20whoa%2C%20oh%0ASweet%20love%20of%20mine%0AWhoa%2C%20oh%2C%20oh%2C%20oh%0ASweet%20child%20o%27%20mine%0AOoh%2C%20yeah%E2%80%A6&op=translate
+		#
+		# https://translate.google.com/?sl=auto&tl=iw&text=She%27s%20got%20a%20smile%20that%20it%20seems%20to%20me%3B%20Reminds%20me%20of%20childhood%20memories%0Where%20everything%20was%20as%20fresh%20as%20the%20bright%20blue%20sky%3B%20Now%20and%20then%20when%20I%20see%20her%20face%0She%20takes%20me%20away%20to%20that%20special%20place%3B%20And%20if%20I%20stare%20too%20long%2C%20I%27d%20probably%20break%20down%20and%20cry%0Whoa%2C%20oh%2C%20oh%3B%20Sweet%20child%20o%27%20mine%0Whoa%2C%20oh%2C%20oh%2C%20oh%3B%20Sweet%20love%20of%20mine%0She%27s%20got%20eyes%20of%20the%20bluest%20skies%3B%20As%20if%20they%20thought%20of%20rain%0I%27d%20hate%20to%20look%20into%20those%20eyes%20and%20see%20an%20ounce%20of%20pain%3B%20Her%20hair%20reminds%20me%20of%20a%20warm%20safe%20place%0Where%20as%20a%20child%20I%27d%20hide%3B%20And%20pray%20for%20the%20thunder%20and%20the%20rain%20to%20quietly%20pass%20me%20by%0Whoa%2C%20oh%2C%20oh%3B%20Sweet%20child%20o%27%20mine%0Whoa%20whoa%2C%20oh%2C%20oh%2C%20oh%3B%20Sweet%20love%20of%20mine%0Whoa%2C%20yeah%3B%20Whoa%2C%20oh%2C%20oh%2C%20oh%0Sweet%20child%20o%27%20mine%3B%20Whoa%2C%20oh%2C%20whoa%2C%20oh%0Sweet%20love%20of%20mine%3B%20Whoa%2C%20oh%2C%20oh%2C%20oh%0Sweet%20child%20o%27%20mine%3B%20Ooh%2C%20yeah%0Whoa%2C%20yeah%3B%20Whoa%2C%20oh%2C%20oh%2C%20oh%0Sweet%20child%20o%27%20mine%3B%20Whoa%2C%20oh%2C%20whoa%2C%20oh%0Sweet%20love%20of%20mine%3B%20Whoa%2C%20oh%2C%20oh%2C%20oh%0Sweet%20child%20o%27%20mine%3B%20Ooh%2C%20yeah%0Ooh%2C%20sweet%20love%20of%20mine%3B%20Where%20do%20we%20go?%0Where%20do%20we%20go%20now?%3B%20Where%20do%20we%20go?%0Ooh%2C%20oh%2C%20where%20do%20we%20go?%3B%20Where%20do%20we%20go%20now?%0Oh%2C%20where%20do%20we%20go%20now?%3B%20Where%20do%20we%20go?%20Sweet%20child%0Where%20do%20we%20go%20now?%3B%20Ay%2C%20ay%2C%20ay%2C%20ay%2C%20ay%2C%20ay%2C%20ay%2C%20ay%0Where%20do%20we%20go%20now?%3B%20Ah%2C%20ah%0Where%20do%20we%20go?%3B%20Oh%2C%20where%20do%20we%20go%20now?%0Oh%2C%20where%20do%20we%20go?%3B%20Oh%2C%20where%20do%20we%20go%20now?%0Where%20do%20we%20go?%3B%20Oh%2C%20where%20do%20we%20go%20now?%0Now%2C%20now%2C%20now%2C%20now%2C%20now%2C%20now%2C%20now%3B%20Sweet%20child%0Sweet%20child%20of%20mine%3B%20&op=translate
+
+		print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+		print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+		print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+		print("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
+		# print(response)
+		#
+		# She%27s%20got%20a%20smile%20that%20it%20seems%20to%20me%3B%20Reminds%20me%20of%20childhood%20memories%0AWhere%20everything%20was%20as%20fresh%20as%20the%20bright%20blue%20sky%0ANow%20and%20then%20when%20I%20see%20her%20face%0AShe%20takes%20me%20away%20to%20that%20special%20place%0AAnd%20if%20I%20stare%20too%20long%2C%20I%27d%20probably%20break%20down%20and%20cry%0AWhoa%2C%20oh%2C%20oh%0ASweet%20child%20o%27%20mine%0AWhoa%2C%20oh%2C%20oh%2C%20oh%0ASweet%20love%20of%20mine%0AShe%27s%20got%20eyes%20of%20the%20bluest%20skies%0AAs%20if%20they%20thought%20of%20rain%0AI%27d%20hate%20to%20look%20into%20those%20eyes%20and%20see%20an%20ounce%20of%20pain%0AHer%20hair%20reminds%20me%20of%20a%20warm%20safe%20place%0AWhere%20as%20a%20child%20I%27d%20hide%0AAnd%20pray%20for%20the%20thunder%20and%20the%20rain%20to%20quietly%20pass%20me%20by%0AWhoa%2C%20oh%2C%20oh%0ASweet%20child%20o%27%20mine%0AWhoa%20whoa%2C%20oh%2C%20oh%2C%20oh%0ASweet%20love%20of%20mine%0AWhoa%2C%20yeah%0AWhoa%2C%20oh%2C%20oh%2C%20oh%0ASweet%20child%20o%27%20mine%0AWhoa%2C%20oh%2C%20whoa%2C%20oh%0ASweet%20love%20of%20mine%0AWhoa%2C%20oh%2C%20oh%2C%20oh%0ASweet%20child%20o%27%20mine%0AOoh%2C%20yeah%E2%80%A6
 
 # return fullL
 
@@ -182,12 +239,12 @@ def doit(item):
 	# return translated
 	# print("!!!!!")
 	# return
-	# fullL = []
-	fullt = "<h1>"+item+"</h1>"
+	fullL = []
+	# fullt = "<h1>"+item+"</h1>"
 	for c in range(len(lyrics)):
 		fullL.append(lyrics[c])
 		if c < len(translated):
-			fullL.append(translated[c][::-1])
+			fullL.append(translated[c])
 		fullL.append("")
 		fullL.append("")
 		# fullt += "<pre>"+lyrics[c] + "</pre>"
