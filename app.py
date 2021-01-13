@@ -12,6 +12,7 @@ import os, requests, uuid, json
 
 
 #gen.py
+from youtube_title_parse import get_artist_title
 
 
 # Make HTTP requests
@@ -76,7 +77,7 @@ def getLyrics(title):
 
 
 	html = getHTML(url)
-	print("\n#####",html,"\n###########")
+	# print("\n#####",html,"\n###########")
 	song_info = []
 	song_title = []
 	for paper in html.findAll("div",class_="auw0zb"):
@@ -136,11 +137,36 @@ def doit(item):
 		# item = input('Enter the song to find its lyricsxx: ')
 
 	res = None
-	maxTries = 3
+	maxTries = 4
 	mc = 0
 	lyricsText, song_info = "sorry, lyrics not found, try again soon ",["Could not find lyrics",item]
-	while res is None and mc < maxTries:
-		res = getLyrics(item)
+	while res is None and mc <= maxTries:
+		# try:
+		target = item
+		print("ITEM:"+target)
+		artist_title = get_artist_title(target)
+		if artist_title is not None:
+			print("@@@@@@@@@@@@@@@@@@@@",artist_title)
+			artist, title = artist_title
+
+			if mc==1:
+				target = title+" " + artist
+				item = item.replace("&"," and ")
+			if mc==2:
+				target = title+" " + artist.split(" ")[0]
+			if mc==3:
+				target = title
+		else:
+			print("!!!!!!!!!!!!!!!!!!!!!!!!")
+			print("!!!!!!!!!!!!!!!!!!!!!!!!")
+			print("!!!!!!!!!!!!!!!!!!!!!!!!")
+
+		print("TTTTTTTTTTTTTTTTT")
+		print(target)
+		print("TTTTTTTTTTTTTTTTT")
+		# except:
+		# 	print("E: could not parse artist and title")
+		res = getLyrics(target)
 		mc+=1
 		if res is not None and len(res) > 1:
 			lyricsText, song_info = res
@@ -308,7 +334,7 @@ def process_text(query):
 	if url:
 		html = getHTML(query)
 		try:
-			processed_text = "-".join(html.title.string.split("-")[:-1])
+			processed_text = "-".join(html.title.string.split("-")[:-1]).replace("/"," ")
 		except:
 			processed_text = ""
 			return render_template('base.html')
@@ -342,12 +368,28 @@ def get_all(processed_text):
 	return render_template('base.html')
 	return a
 
+#
+# @app.route('/lyrics/<string:title>')
+# def get_stairway(title):
+# 	processed_text = process_text(title.replace("+"," "))
+# 	print("!!!!!!!!!",processed_text)
+# 	return get_all(processed_text)
+#
 
-@app.route('/lyrics/<string:title>')
-def get_stairway(title):
-	processed_text = process_text(title.replace("+"," "))
-	print("!!!!!!!!!",processed_text)
-	return get_all(processed_text)
+@app.route('/<path:text>', methods=['GET', 'POST'])
+def all_routes(text):
+	print("@@@@@@@@@")
+	print(text)
+	if "lyrics/" in text:
+		text = text.replace("lyrics/","")
+		processed_text = process_text(text.replace("+"," "))
+		print("!!!!!!!!!",processed_text)
+		return get_all(processed_text)
+
+	if text in refs:
+		return redirect(refs[text])
+	else:
+		return redirect("/")
 
 
 if __name__ == "__main__":
