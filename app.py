@@ -34,8 +34,12 @@ import re
 import requests
 from bs4 import BeautifulSoup, UnicodeDammit, NavigableString
 
-from googletrans import Translator
-translator = Translator()
+# from googletrans import Translator
+
+from google_trans_new import google_translator
+
+translator = google_translator()
+# translator = Translator()
 # import datetime
 
 # GCS_API_KEY = 'AIzaSyCHOkya9h3n7BWA10S_CQQkz-p9Wlreh44'
@@ -130,6 +134,12 @@ def changes(txt,dict):
 		txt = txt.replace(k,dict[k])
 	return txt
 
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
+
 def doit(item):
 	if item == "":
 		return "", ["",""]
@@ -214,9 +224,26 @@ def doit(item):
 				i+=1
 	else:
 
-		res = translator.translate(lyricsText,dest="he")
-		translated = res.__dict__()["text"]
-		translated = translated.split("\n")
+		n = 0
+		parts = []
+
+		print(lyricsText)
+		print(type(lyricsText), len(lyricsText),len(lyricsText.split("\n")))
+		maxChunks = 50
+		for chunk in chunks(lyricsText.split("\n"), maxChunks):
+			chunkT = "\n".join(chunk)
+			print("!!!!!!!!!!!!","\n",chunkT)
+			res = translator.translate(str(chunkT),lang_tgt="he")
+			print("$$$$$$$$$$$$$$$$$$$$$")
+			print(res)
+			parts.append(res)
+		# time.sleep(1)
+			# n+=1
+		# res = translator.translate(lyricsText,lang_tgt="he")
+		print("########################@@@")
+		print(parts)
+		# translated = res.__dict__()["text"]
+		translated = ("".join(parts)).split("\n")
 		print("############################")
 		print(translated)
 		print("XXXXXXXXXXXXXXXXXXXXXXXXXXX")
@@ -400,11 +427,11 @@ def all_routes(text):
 		processed_text = process_text(text.replace("+"," "))
 		print("!!!!!!!!!",processed_text)
 		return get_all(processed_text)
-
-	if text in refs:
-		return redirect(refs[text])
-	else:
-		return redirect("/")
+	#
+	# if text in refs:
+	# 	return redirect(refs[text])
+	# else:
+	# 	return redirect("/")
 
 
 if __name__ == "__main__":
