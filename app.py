@@ -236,7 +236,7 @@ def doit(item):
 			res = translator.translate(str(chunkT),lang_tgt="he")
 			print("$$$$$$$$$$$$$$$$$$$$$")
 			print(res)
-			parts.append(res)
+			parts.append(res+"\n")
 		# time.sleep(1)
 			# n+=1
 		# res = translator.translate(lyricsText,lang_tgt="he")
