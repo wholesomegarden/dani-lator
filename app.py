@@ -331,7 +331,7 @@ def doit(item):
 				res+=f"~~~ line count"+str(len(res.split("\n")))
 			print("$$$$$$$$$$$$$$$$$$$$$")
 			print(res)
-			parts.append(res.replace("OXO",""))
+			parts.append(res.replace("OXO","").replace("oxo",""))
 		# time.sleep(1)
 			# n+=1
 		# res = translator.translate(lyricsText,lang_tgt="he")
