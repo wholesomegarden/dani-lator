@@ -36,7 +36,7 @@ from bs4 import BeautifulSoup, UnicodeDammit, NavigableString
 
 # from googletrans import Translator
 
-from google_trans_new.google_trans_new import google_translator
+from google_trans_new import google_translator
 
 translator = google_translator()
 
