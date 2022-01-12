@@ -7,7 +7,6 @@
 # You may need to install requests and uuid.
 # Run: pip install requests uuid
 
-import os, requests, uuid, json
 import lyricwikia
 
 
@@ -15,6 +14,7 @@ import lyricwikia
 
 
 # Make HTTP requests
+import requests
 import requests
 # Scrape data from an HTML document
 from bs4 import BeautifulSoup
@@ -24,21 +24,20 @@ import os
 import re
 
 # class gen:
-GENIUS_API_TOKEN = client_access_token = 'q2iKacoJeJRs5q6UC1AnYWN4IriZnwgV4FhoXWxIERxORuOb9GxUdAbWDD_K1D5q'
+GENIUS_API_TOKEN = token = client_access_token = 'q2iKacoJeJRs5q6UC1AnYWN4IriZnwgV4FhoXWxIERxORuOb9GxUdAbWDD_K1D5q'
 
 
 item = "stairway to heaven"
 # item = input('Enter the song to find its lyrics: ')
 
 
-import requests
+import os, requests, uuid, json
 from bs4 import BeautifulSoup, UnicodeDammit
 # import datetime
 def gsearch(item):
 	searchSong='https://www.google.com/search?q='
 	# s=input('Enter the song to find its lyrics: ')
 	s = '\"'+item+'\"'
-
 	#calculating time taken in searching lyrics
 	# a = datetime.datetime.now()
 	for i in s:
@@ -47,9 +46,6 @@ def gsearch(item):
 		else:
 			searchSong+=i
 	searchSong+='+lyrics'
-
-
-
 	headers_Get = {
 			'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0',
 			'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
@@ -59,9 +55,6 @@ def gsearch(item):
 			'Connection': 'keep-alive',
 			'Upgrade-Insecure-Requests': '1'
 		}
-
-
-
 	searchPage = requests.get(searchSong, headers=headers_Get)
 	html = BeautifulSoup(searchPage.text,'html.parser')
 	lyrics=html.find_all("span", jsname="YS01Ge")
@@ -86,11 +79,11 @@ def request_artist_info(artist_name, page):
 	data = {'q': artist_name}
 	response = requests.get(search_url, data=data, headers=headers)
 	return response
+
 # Get Genius.com song url's from artist object
 def request_song_url(artist_name, song_cap):
 	page = 1
 	songs = []
-
 	while True:
 		response = request_artist_info(artist_name, page)
 		json = response.json()
@@ -99,18 +92,15 @@ def request_song_url(artist_name, song_cap):
 		for hit in json['response']['hits']:
 			if artist_name.lower() in hit['result']['primary_artist']['name'].lower():
 				song_info.append(hit)
-
 		# Collect song URL's from song objects
 		for song in song_info:
 			if (len(songs) < song_cap):
 				url = song['result']['url']
 				songs.append(url)
-
 		if (len(songs) == song_cap):
 			break
 		else:
 			page += 1
-
 	print('Found {} songs by {}'.format(len(songs), artist_name))
 	return songs
 

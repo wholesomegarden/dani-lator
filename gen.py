@@ -22,6 +22,7 @@ def request_artist_info(artist_name, page):
     data = {'q': artist_name}
     response = requests.get(search_url, data=data, headers=headers)
     return response
+
 # Get Genius.com song url's from artist object
 def request_song_url(artist_name, song_cap):
     page = 1

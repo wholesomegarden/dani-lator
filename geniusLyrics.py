@@ -41,9 +41,22 @@ def setup(search_term):
         else:
             return outputfilename
 
-def search(search_term,outputfilename,client_access_token):
-    with codecs.open(outputfilename, 'ab', encoding='utf8') as outputfile:
-        outwriter = csv.writer(outputfile)
+client_id, client_secret, client_access_token = load_credentials()
+def main():
+    arguments = sys.argv[1:] #so you can input searches from command line if you want
+    search_term = arguments[0].translate("\'\"")
+    # outputfilename = setup(search_term)
+    print("CREDS LOADED searching for",search_term)
+
+    url, title, artist = search(search_term,outputfilename,client_access_token)
+    print("!!!!!!!!!!!",url, title, artist)
+    lyrics = scrape_song_lyrics(url)
+
+def search(search_term):
+    # outputfilename,client_access_token
+    if True:
+    # with codecs.open(outputfilename, 'ab', encoding='utf8') as outputfile:
+        # outwriter = csv.writer(outputfile)
         #Unfortunately, looks like it maxes out at 50 pages (approximately 1,000 results), roughly the same number of results as displayed on web front end
         page=1
         while True:
@@ -90,16 +103,6 @@ def search(search_term,outputfilename,client_access_token):
 
             page+=1
 
-def main():
-    arguments = sys.argv[1:] #so you can input searches from command line if you want
-    search_term = arguments[0].translate("\'\"")
-    outputfilename = setup(search_term)
-    client_id, client_secret, client_access_token = load_credentials()
-    print("CREDS LOADED searching for",search_term)
-
-    url, title, artist = search(search_term,outputfilename,client_access_token)
-    print("!!!!!!!!!!!",url, title, artist)
-    lyrics = scrape_song_lyrics(url)
 
 import requests
 from bs4 import BeautifulSoup

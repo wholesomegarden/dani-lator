@@ -39,6 +39,11 @@ from bs4 import BeautifulSoup, UnicodeDammit, NavigableString
 from google_trans_new import google_translator
 
 translator = google_translator()
+
+from lyricsgenius import Genius
+token = "pq_DFKQQcMYGRmEAXT-hxcR1FfMma3lREuGJ2DQeRry3a7q7WAHm-fxzDMooyXpA"
+genius = Genius(token)
+
 # translator = Translator()
 # import datetime
 
@@ -46,21 +51,66 @@ translator = google_translator()
 # GCS_ENGINE_ID = 'Danilator'
 # from lyrics_extractor import SongLyrics
 
+def research(url):
+	html = getHTML(url)
+	c = 0
+	for d in html.findAll("div"):
+		print(d.text)
+		print(c)
+		c += 1
+		input()
+
 def getHTML(url):
 	headers_Get = {
-			'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:49.0) Gecko/20100101 Firefox/49.0',
-			'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-			'Accept-Language': 'en-US,en;q=0.5',
-			'Accept-Encoding': 'gzip, deflate',
-			'DNT': '1',
-			'Connection': 'keep-alive',
-			'Upgrade-Insecure-Requests': '1'
-		}
-	searchPage = requests.get(url, headers=headers_Get)
+	'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:77.0) Gecko/20100101 Firefox/77.0',
+	'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+	'Accept-Language': 'en-US,en;q=0.5',
+	'Accept-Encoding': 'gzip, deflate',
+	'DNT': '1',
+	'Connection': 'keep-alive',
+	'Upgrade-Insecure-Requests': '1'
+	}
+	# headers_Get = {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:77.0) Gecko/20100101 Firefox/77.0'}
+	proxies = {
+    "https": "http://178.155.104.84:59071",
+    "http": "http://178.155.104.84:59071"
+	}
+	proxies = {
+    "https": "http://51.161.130.93:8080",
+    "http": "http://51.161.130.93:8080"
+	}
+	searchPage = requests.get(url, headers=headers_Get,proxies=proxies)
 	html = BeautifulSoup(searchPage.text,'html.parser')
 	return html
 
+# research(url)
+
 def getLyrics(title):
+	song = genius.search_song(title)
+	fulltitle = f"{title} / "
+	lyrics = []
+	if song is not None:
+		fulltitle = f"{song.title} / {song.artist}"
+		lyrics = song.lyrics.split("\n")[:-5]
+
+
+	if lyrics==[]:
+		print('Couldn\'t get lyrics')
+	else:
+		nlyr = ""
+		# nl = ["; ","\n"] # double lined
+		nl = ["\n","\n"]
+		c = 0
+		for i in lyrics:
+			# print(i.get_text())
+			if len(i.strip()) == 0 or (i.strip()[0] is not "[" and i.strip()[-1] is not "]"):
+			# if True:
+				nlyr += i + nl[c%2]
+				c+=1
+		return nlyr, fulltitle.split("/")
+		return nlyr, song_info
+
+def getLyricsGoogle(title):
 	# return lyricwikia.get_lyrics('Led Zeppelin', 'Stairway to heaven')
 	# search("")
 	# print("title",title)
@@ -81,6 +131,12 @@ def getLyrics(title):
 
 	html = getHTML(url)
 	# print("\n#####",html,"\n###########")
+	fulltitle = f"{title} / "
+	try:
+		fulltitle = html.findAll("div",{"class":"kCrYT"})[0].find_all("span")[0].findParent().text
+	except:
+		pass
+	'''
 	song_info = []
 	song_title = []
 	for paper in html.findAll("div",class_="auw0zb"):
@@ -108,15 +164,19 @@ def getLyrics(title):
 	if len(song_info) < 2:
 		print("wwwwwwwwwwww",song_info)
 		song_info = []
-		for paper in html.findAll("div",class_="SPZz6b"):
+		# for paper in html.findAll("div",class_="SPZz6b"):
+		for paper in html.findAll("div[class*=wwUB2c]"):
 			for desc in paper.descendants:
 				print("DDDDDDDD",desc)
 			info = [desc.strip() for desc in paper.descendants if type(desc) == NavigableString]
 			for i in info:
 				song_info.append(i)
+	'''
 
-
-	lyrics=html.find_all("span", jsname="YS01Ge")
+	# lyrics=html.find_all("span", jsname="YS01Ge")
+	# lyrics=html.find_all("span", jsname="YS01Ge")
+	lyrics=html.find_all("div", {"class":"hwx"})
+	# lyrics=html.find_all("div", {"class":"hwx"})[0].findParent()
 	if lyrics==[]:
 		print('Couldn\'t get lyrics')
 	else:
@@ -127,6 +187,7 @@ def getLyrics(title):
 			# print(i.get_text())
 				nlyr += i.get_text() + nl[c%2]
 				c+=1
+		return nlyr, fulltitle.split("/")
 		return nlyr, song_info
 
 def changes(txt,dict):
@@ -135,9 +196,9 @@ def changes(txt,dict):
 	return txt
 
 def chunks(lst, n):
-    """Yield successive n-sized chunks from lst."""
-    for i in range(0, len(lst), n):
-        yield lst[i:i + n]
+	"""Yield successive n-sized chunks from lst."""
+	for i in range(0, len(lst), n):
+		yield lst[i:i + n]
 
 
 def doit(item):
@@ -231,19 +292,20 @@ def doit(item):
 		print(type(lyricsText), len(lyricsText),len(lyricsText.split("\n")))
 		maxChunks = 50
 		for chunk in chunks(lyricsText.split("\n"), maxChunks):
-			chunkT = "\n".join(chunk)
-			print("!!!!!!!!!!!!","\n",chunkT)
-			res = translator.translate(str(chunkT),lang_tgt="he")
+			joiner = "\n"
+			chunkT = joiner.join(chunk)
+			print("!!!!!!!!!!!!","\n",chunkT) #XXX
+			res = translator.translate(str(chunkT),lang_tgt="he")#.replace("Ø","ø")#.replace(joiner.strip(),"\n")
 			print("$$$$$$$$$$$$$$$$$$$$$")
 			print(res)
-			parts.append(res+"\n")
+			parts.append(res+"\n\n\n")
 		# time.sleep(1)
 			# n+=1
 		# res = translator.translate(lyricsText,lang_tgt="he")
 		print("########################@@@")
 		print(parts)
 		# translated = res.__dict__()["text"]
-		translated = ("".join(parts)).split("\n")
+		translated = ("\n".join(parts)).split("\n")
 		print("############################")
 		print(translated)
 		print("XXXXXXXXXXXXXXXXXXXXXXXXXXX")
@@ -294,6 +356,7 @@ def doit(item):
 	fullL = []
 	# fullt = "<h1>"+item+"</h1>"
 	for c in range(len(lyrics)):
+		# fullL.append(lyrics[c]+"@")
 		fullL.append(lyrics[c])
 		if c < len(translated):
 			fullL.append(translated[c])
@@ -343,12 +406,13 @@ def my_form():
 def my_form_post():
 	query = request.form['text']
 	processed_text = process_text(query)
-	print("!!!!!!!!!",processed_text)
+	print("!!!!!!xxx!!!",processed_text)
 	return get_all(processed_text)
 
 def process_text(query):
 	print("QQQQQQQQQQQQQQQQ",query)
 	if query is "":
+		# print("XXXXXXXXXXX")
 		return  render_template('base.html',title = u"\U0001F49A")
 	urlChecks = ["http","youtu","spotify"]
 	url = False
@@ -424,9 +488,9 @@ def all_routes(text):
 	print(text)
 	if "lyrics/" in text:
 		text = text.replace("lyrics/","")
-		processed_text = process_text(text.replace("+"," "))
-		print("!!!!!!!!!",processed_text)
-		return get_all(processed_text)
+	processed_text = process_text(text.replace("+"," "))
+	print("!!!!!!!!!",processed_text)
+	return get_all(processed_text)
 	#
 	# if text in refs:
 	# 	return redirect(refs[text])
