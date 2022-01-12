@@ -295,7 +295,8 @@ def doit(item):
 			joiner = "\n"
 			chunkT = joiner.join(chunk)
 			print("!!!!!!!!!!!!","\n",chunkT) #XXX
-			res = translator.translate(str(chunkT),lang_tgt="he")#.replace("Ø","ø")#.replace(joiner.strip(),"\n")
+			# res = translator.translate(str(chunkT),lang_tgt="he")#.replace("Ø","ø")#.replace(joiner.strip(),"\n")
+			res = translator.translate(str("TRANSLATE THIS"),lang_tgt="he")#.replace("Ø","ø")#.replace(joiner.strip(),"\n")
 			print("$$$$$$$$$$$$$$$$$$$$$")
 			print(res)
 			parts.append(res+"\n\n\n")
