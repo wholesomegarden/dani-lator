@@ -91,7 +91,7 @@ def getLyrics(title):
 	lyrics = []
 	if song is not None:
 		fulltitle = f"{song.title} / {song.artist}"
-		lyrics = song.lyrics.split("\n")[:-5]
+		lyrics = song.lyrics.split("\n")[:-6]
 
 
 	if lyrics==[]:
@@ -355,6 +355,10 @@ def doit(item):
 	# return
 	fullL = []
 	# fullt = "<h1>"+item+"</h1>"
+	while lyrics[0] is "":
+		lyrics = lyrics[1:]
+	while translated[0] is "":
+		translated = translated[1:]
 	for c in range(len(lyrics)):
 		# fullL.append(lyrics[c]+"@")
 		fullL.append(lyrics[c])
