@@ -126,12 +126,26 @@
             class="pb-4 flex items-center sm:font-medium text-2xl sm:text-3xl md:text-4xl text-orange-900"
           ></header>
           <form action="/" method="post" class="inline-flex pb-4">
+            {% if full %}
+            <!-- value = {{full}} -->
             <input
+            class="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker value=full"
+            placeholder="Song Title or URL…"
+            type="text"
+            name="text"
+            />
+             <!-- {{ full }}
+             yyyy -->
+            {% else %}
+              <input
               class="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker"
               placeholder="Song Title or URL…"
               type="text"
               name="text"
-            />
+              />
+              <!-- xxxxxxxxx -->
+
+            {% endif %}
             <button
               class="flex-no-shrink bg-purple-200 p-2 border-2 rounded text-teal border-teal hover:text-green hover:bg-teal"
               type="submit"

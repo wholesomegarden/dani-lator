@@ -256,7 +256,7 @@ def doit(item):
 	}]
 
 	translated = []
-
+	debug = False
 	bing = False
 	if bing:
 		request = requests.post(constructed_url, headers=headers, json=body)
@@ -288,18 +288,50 @@ def doit(item):
 
 		n = 0
 		parts = []
-
 		print(lyricsText)
 		print(type(lyricsText), len(lyricsText),len(lyricsText.split("\n")))
 		maxChunks = 50
 		for chunk in chunks(lyricsText.split("\n"), maxChunks):
-			joiner = "\n"
-			chunkT = joiner.join(chunk)
-			print("!!!!!!!!!!!!","\n",chunkT) #XXX
-			res = translator.translate(str(chunkT),lang_tgt="he")#.replace("Ø","ø")#.replace(joiner.strip(),"\n")
+			match = False
+			joiner = " øxø"
+			joiner = " █"
+			joiner = " ø"
+			finalJoiner = ""
+			joiners = [" øxø"," AAAAA"," øø"," █"]
+			joiners = [" øøø "," øxø"]
+			joiners = [" 123\n "," øxø\n"]
+			# joiners = [" 123\n "]
+			res = ""
+			for joiner in joiners:
+				if not match:
+					finalJoiner = joiner
+					# joiner = " █ øxø"
+					# joinerN = joiner+"\n"
+					joinerN = joiner
+					chunkT = joinerN.join(chunk)
+					print("!!!!!!!!!!!!","\n",chunkT) #XXX
+					# res = translator.translate(str(chunkT),lang_tgt="he").replace("Ø","ø").replace(joinerN,joiner.strip())
+					res = translator.translate(str(chunkT),lang_tgt="he").replace("Ø","ø")#.replace(joinerN,joiner.strip())
+					if chunkT.count(joiner.strip().strip("\n")) == res.count(joiner.strip().strip("\n")):
+						match = True
+						if debug:
+							res += f"--- "+str(chunkT.count(joiner.strip().strip("\n")))+" ======== "+str(res.count(joiner.strip().strip("\n")))
+					else:
+						print(f"--- "+str(chunkT.count(joiner.strip().strip("\n")))+" != "+str(res.count(joiner.strip().strip("\n"))))
+						if debug:
+							res += f"--- "+str(chunkT.count(joiner.strip().strip("\n")))+" != "+str(res.count(joiner.strip().strip("\n")))
+			if len(res.split("\n")) > 1:
+				res=res.replace(finalJoiner.strip(),"")
+			else:
+				if debug:
+					res=res.replace(finalJoiner.strip(),"@@\n")
+				else:
+					res=res.replace(finalJoiner.strip(),"\n")
+			if debug:
+				res+=f"~~~ line count"+str(len(res.split("\n")))
 			print("$$$$$$$$$$$$$$$$$$$$$")
 			print(res)
-			parts.append(res+"\n\n\n")
+			parts.append(res)
 		# time.sleep(1)
 			# n+=1
 		# res = translator.translate(lyricsText,lang_tgt="he")
@@ -356,15 +388,51 @@ def doit(item):
 	# return
 	fullL = []
 	# fullt = "<h1>"+item+"</h1>"
+
 	while lyrics[0] is "":
 		lyrics = lyrics[1:]
-	while translated[0] is "":
+	while translated[0] is "" or translated[0].strip() == ".":
 		translated = translated[1:]
+
+	# finalLyrics = []
+	# finalTranslated = []
+	# for l in lyrics:
+	# 	if l.strip() != ".":
+	# 		finalLyrics.append(l)
+	# for l in translated:
+	# 	if l.strip() != ".":
+	# 		finalTranslated.append(l)
+	# lyrics = finalLyrics
+	# translated = finalTranslated
+	toff = 0
 	for c in range(len(lyrics)):
 		# fullL.append(lyrics[c]+"@")
-		fullL.append(lyrics[c])
-		if c < len(translated):
-			fullL.append(translated[c])
+		# fullL.append(lyrics[c])
+		addL = lyrics[c]
+		if addL.strip() == ".":
+			addL = " "
+
+		if debug:
+			fullL.append("E: "+addL +"@@")
+		else:
+			fullL.append(addL)
+
+
+		if c+toff < len(translated):
+			addT = translated[c+toff]
+			if addT.strip() == ".":
+				addT = " "
+			# fullL.append(translated[c])
+			if addT.strip() == ".":
+				fullL.append(f"-1 {c} {toff}, {addT}")
+				toff+=1
+				# addT = translated[c+toff]
+				# if addT.strip() == ".":
+				# 	addT = " "
+			if debug:
+				fullL.append("T: "+addT)
+			else:
+				fullL.append(addT)
 		fullL.append("")
 		fullL.append("")
 		# fullt += "<pre>"+lyrics[c] + "</pre>"
@@ -375,7 +443,7 @@ def doit(item):
 
 	print(" @ @ @ @ @ @  @")
 	print(fullL)
-	return fullL, song_info
+	return fullL, song_info, item.replace(" ","⠀")
 
 from flask import Flask, render_template, request, redirect  # add
 
@@ -404,21 +472,24 @@ app = Flask(__name__)
 
 @app.route('/')
 def my_form():
-	return render_template('base.html')
+	return render_template('base.html', full = None)
 
 # loading = "aaaaaaaaa"
 @app.route('/', methods=['POST'])
 def my_form_post():
 	query = request.form['text']
+	if query is "":
+		return  render_template('base.html',title = u"\U0001F49A", full = None)
 	processed_text = process_text(query)
 	print("!!!!!!xxx!!!",processed_text)
-	return get_all(processed_text)
+
+	return get_all(processed_text, query)
 
 def process_text(query):
 	print("QQQQQQQQQQQQQQQQ",query)
 	if query is "":
 		# print("XXXXXXXXXXX")
-		return  render_template('base.html',title = u"\U0001F49A")
+		return  render_template('base.html',title = u"\U0001F49A", full = None)
 	urlChecks = ["http","youtu","spotify"]
 	url = False
 	for check in urlChecks:
@@ -448,7 +519,7 @@ def process_text(query):
 		except Exception as e:
 			print("EEEEEEEEEEEEEEEEEE: Processing Text ",e)
 			processed_text = ""
-			return render_template('base.html')
+			return render_template('base.html', full = None)
 		print("UUUUUUUUUUUUUUUUUUUUUU",processed_text)
 		print("UUUUUUUUUUUUUUUUUUUUUU",processed_text)
 		print("UUUUUUUUUUUUUUUUUUUUUU",processed_text)
@@ -459,11 +530,13 @@ def process_text(query):
 		return " "
 	return processed_text
 
-def get_all(processed_text):
-	a, song_info = doit(processed_text)
+def get_all(processed_text, text):
+	a, song_info, title = doit(processed_text)
 	# print(a)
 	# return redirect('/lyrics/'+text)
 	song_txt = ""
+	if text is "/":
+		text = ""
 
 	if song_info is None or len(song_info) < 1:
 		song_info.append(processed_text)
@@ -475,8 +548,10 @@ def get_all(processed_text):
 		for s in song_info[1:]:
 			song_txt += " - "+s
 		print("!!!!!!!!!!!!!!!!!!",song_info[0]+" - "+song_info[1])
-		return render_template('base.html',tasks = a , title = song_txt)
-	return render_template('base.html')
+		return render_template('base.html',tasks = a , title = song_txt, full = text.replace(" ","_"))
+	return render_template('base.html', full = text.replace(" ","_"))
+	# 	return render_template('base.html',tasks = a , title = song_txt, full = text.replace(" ","⠀"))
+	# return render_template('base.html', full = text.replace(" ","⠀"))
 	return a
 
 #
@@ -489,13 +564,17 @@ def get_all(processed_text):
 
 @app.route('/<path:text>', methods=['GET', 'POST'])
 def all_routes(text):
+	print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
+	text = text.replace("⠀"," ")
+	if text is "/":
+		text = ""
 	print("@@@@@@@@@")
 	print(text)
 	if "lyrics/" in text:
 		text = text.replace("lyrics/","")
 	processed_text = process_text(text.replace("+"," "))
 	print("!!!!!!!!!",processed_text)
-	return get_all(processed_text)
+	return get_all(processed_text, text)
 	#
 	# if text in refs:
 	# 	return redirect(refs[text])
