@@ -36,7 +36,7 @@ from bs4 import BeautifulSoup, UnicodeDammit, NavigableString
 
 # from googletrans import Translator
 
-from google_trans_new import google_translator
+from google_trans_new.google_trans_new import google_translator
 
 translator = google_translator()
 
@@ -46,6 +46,7 @@ genius = Genius(token)
 
 # translator = Translator()
 # import datetime
+#
 
 # GCS_API_KEY = 'AIzaSyCHOkya9h3n7BWA10S_CQQkz-p9Wlreh44'
 # GCS_ENGINE_ID = 'Danilator'
